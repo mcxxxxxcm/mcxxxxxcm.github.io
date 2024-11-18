@@ -1,1 +1,1179 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>生日快乐！</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        .page {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            scroll-snap-align: start;
+        }
+
+        .container {
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+            scrollbar-width: none;  /* Firefox */
+            -ms-overflow-style: none;  /* IE and Edge */
+        }
+
+        .container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .dialog {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 25px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+            max-width: 400px;
+            opacity: 0;
+            font-size: 1.2em;
+            will-change: transform, opacity;
+            transition: all 1s ease;
+        }
+
+        .dialog.left {
+            transform: translateX(-100px);
+        }
+
+        .dialog.right {
+            transform: translateX(100px);
+        }
+
+        .dialog.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .page .dialog:nth-child(odd) {
+            transform: translateX(-200px);
+            transition-delay: 0.3s;
+        }
+
+        .page .dialog:nth-child(even) {
+            transform: translateX(200px);
+            transition-delay: 0.6s;
+        }
+
+        .page .dialog:nth-child(3) {
+            transform: translateX(-200px);
+            transition-delay: 0.9s;
+        }
+
+        #page1 {
+            background-image: url('https://static-cse.canva.cn/blob/238716/8.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        #page2 {
+            background-image: url('https://n.sinaimg.cn/sinakd20113/0/w2048h1152/20210728/ab6a-ef87ccc32e45e50b8589f365ef1e6cca.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        #page3 {
+            background-image: url('https://n.sinaimg.cn/sinakd20113/1/w2048h1153/20210728/48a3-9f82ffd3c3a6ff8a044a99a371f04c38.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+         }
+        #page4 {
+            background-image: url('https://n.sinaimg.cn/sinakd20113/0/w2048h1152/20210728/f083-6d8003bfffed6e280b83fb01f1fe16e7.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        #page5 {
+            background-image: url('https://n.sinaimg.cn/sinakd20113/1/w2048h1153/20210728/02e8-0a50e7e37ea270d0c73ce5a6b87e5889.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        #page6 {
+            background-image: url('https://n.sinaimg.cn/sinakd20113/0/w2048h1152/20210728/552c-333cf0127dc0532a609f26dc259d56ac.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        #page7 {
+            background-image: url('https://n.sinaimg.cn/sinakd20113/0/w2048h1152/20210728/04ff-99d414d19c9cadfebf7c52a9758f180c.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        #page8 {
+            background-image: url('https://n.sinaimg.cn/sinakd20113/725/w2000h1125/20210728/f0a5-ccb543544ba0acfd1affc68b39499600.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        #page9 {
+            background-image: url('https://n.sinaimg.cn/sinakd20113/0/w2048h1152/20210728/8236-59ff5583e12735d78745b12a66a60084.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        #cover {
+            transition: opacity 1s ease-in-out;
+        }
+
+        #cover:hover .enter-text {
+            transform: scale(1.1);
+        }
+
+        .candle {
+            position: relative;
+            width: 80px;
+            height: 150px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .candle-body {
+            position: absolute;
+            bottom: 0;
+            width: 35px;
+            height: 140px;
+            background: linear-gradient(
+                to right,
+                #fff6e6 0%,
+                #ffffff 20%,
+                #fff6e6 40%,
+                #ffefd6 60%,
+                #fff6e6 80%,
+                #ffffff 100%
+            );
+            border-radius: 17px 17px 8px 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 
+                inset -10px 0 10px -10px rgba(0,0,0,0.1),
+                inset 10px 0 10px -10px rgba(0,0,0,0.1),
+                0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .wick {
+            position: absolute;
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(
+                to right,
+                #f0f0f0,
+                #ffffff,
+                #f0f0f0
+            );
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        .wick::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 6px;
+            background: #f0f0f0;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .flame {
+            position: absolute;
+            width: 20px;
+            height: 35px;
+            background: linear-gradient(
+                to top,
+                #ff6600 0%,
+                #ffcc00 60%,
+                #ffffff 100%
+            );
+            border-radius: 50% 50% 20% 20% / 60% 60% 40% 40%;
+            top: -45px;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            visibility: hidden;
+            box-shadow: 
+                0 0 20px #ff6600,
+                0 0 40px #ff6600,
+                0 0 60px #ff9933,
+                0 0 80px rgba(255,102,0,0.3);
+        }
+
+        .flame::before {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 25px;
+            background: #ffffff;
+            border-radius: 50% 50% 20% 20% / 60% 60% 40% 40%;
+            top: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+        }
+
+        .candle.lit .flame {
+            opacity: 1;
+            visibility: visible;
+            animation: ignite 0.3s ease-out, flicker 1s infinite alternate;
+        }
+
+        .candle.lit .flame::before {
+            opacity: 0.5;
+        }
+
+        .candle.lit .wick::before {
+            opacity: 1;
+        }
+
+        @keyframes flicker {
+            0%, 100% {
+                transform: translateX(-50%) scale(1) rotate(-2deg);
+                opacity: 0.9;
+            }
+            25% {
+                transform: translateX(-50%) scale(1.1) rotate(2deg);
+                opacity: 1;
+            }
+            50% {
+                transform: translateX(-50%) scale(0.9) rotate(-1deg);
+                opacity: 0.8;
+            }
+            75% {
+                transform: translateX(-50%) scale(1.05) rotate(1deg);
+                opacity: 0.95;
+            }
+        }
+
+        .wax-drips {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .wax-drip {
+            position: absolute;
+            background: linear-gradient(
+                to bottom,
+                rgba(255, 255, 255, 0.8),
+                rgba(255, 246, 230, 0.8)
+            );
+            border-radius: 8px 8px 2px 2px;
+            box-shadow: 
+                inset -2px 0 2px rgba(0,0,0,0.1),
+                inset 2px 0 2px rgba(0,0,0,0.1);
+        }
+
+        .wax-drip:nth-child(1) {
+            left: 10%;
+            top: 20%;
+            width: 8px;
+            height: 20px;
+            transform: rotate(-5deg);
+        }
+
+        .wax-drip:nth-child(2) {
+            left: 75%;
+            top: 30%;
+            width: 6px;
+            height: 12px;
+            transform: rotate(5deg);
+        }
+
+        .wax-drip:nth-child(3) {
+            left: 30%;
+            top: 40%;
+            width: 7px;
+            height: 15px;
+            transform: rotate(-3deg);
+        }
+
+        .candle:hover {
+            transform: scale(1.02);
+        }
+
+        .enter-text {
+            margin-top: 180px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px 40px;
+            border-radius: 10px;
+            font-size: 24px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            transition: opacity 0.5s ease;
+            text-align: center;
+        }
+
+        .fade-out {
+            opacity: 0;
+        }
+
+        /* 自定义光标样式 */
+        .lighter-cursor {
+            cursor: url('path/to/lighter.png') 16 16, pointer;
+        }
+
+        /* 点燃状态下恢复默认光标 */
+        .candle.lit {
+            cursor: default;
+        }
+
+        /* 火焰初始状态 */
+        .flame {
+            /* ... 原有样式保持不变 ... */
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        /* 点燃状态的火焰 */
+        .candle.lit .flame {
+            opacity: 1;
+        }
+
+        /* 添加点燃动画 */
+        @keyframes ignite {
+            0% {
+                transform: translateX(-50%) scale(0.5);
+                opacity: 0;
+            }
+            50% {
+                transform: translateX(-50%) scale(1.2);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateX(-50%) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .candle.lit .flame {
+            animation: ignite 0.3s ease-out, flicker 1s infinite alternate;
+        }
+
+        /* 点燃状态下的灯芯效果 */
+        .candle.lit .wick::before {
+            opacity: 1;
+        }
+
+        /* 烟花容器 */
+        .fireworks {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1002;
+        }
+
+        /* 烟花粒子 */
+        .firework {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            animation: explode 1s ease-out forwards;
+            box-shadow: 0 0 4px currentColor;
+        }
+
+        /* 烟花爆炸动画 */
+        @keyframes explode {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--final-x), var(--final-y)) scale(0);
+                opacity: 0;
+            }
+        }
+
+        #stars{
+            text-decoration: none;
+        }
+        #stars:hover{
+            font-size: 20px;
+        }
+
+        /* 调整照片容和图片大小 */
+        .page .photo-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;  /* 照片之间的间距 */
+            flex-wrap: wrap;  /* 允许照片换行 */
+        }
+
+        .page img {
+            width: 300px;  /* 设置固定宽度 */
+            height: 200px;  /* 设置固定高度 */
+            object-fit: cover;  /* 保持图片比例，裁剪多余部分 */
+            border-radius: 10px;  /* 圆角 */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);  /* 添加阴影 */
+            transition: transform 0.3s ease;  /* 添加过渡效果 */
+        }
+
+        .page img:hover {
+            transform: scale(1.05);  /* 鼠标悬停时略微放大 */
+        }
+
+        /* 添加视频容器和视频样式 */
+        .page video {
+            width: 180px;  /* 减小宽度 */
+            height: 240px;  /* 按照相同例�� */
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .page video:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+
+        /* 添加视频控制样式 */
+        .page video::-webkit-media-controls {
+            background-color: rgba(255, 255, 255, 0.5);  /* 半透明控制栏背景 */
+            border-radius: 0 0 10px 10px;  /* 底部圆角 */
+        }
+
+        /* 添加或修改图片样式 */
+        #page6 img {
+            width: 600px;
+            height: 600px;
+            object-fit: cover;
+            object-position: center;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        #p6picture{
+            height: 60%;
+            width: 60%;
+            float: right;
+            text-decoration: none;
+            overflow: hidden; /* 添加溢出隐藏 */
+        }
+
+        /* 轮播图容器样式 */
+        .banner {
+            height: 70vh;
+            width: 60%;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .slider {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        .slide img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            width: auto;
+            height: auto;
+        }
+
+        /* 修改 p6picture 的尺寸 */
+        #p6picture {
+            height: 70vh;         /* 使用视窗高度的70% */
+            width: 60%;          /* 使用60%的宽度 */
+            margin: 0 auto;      /* 居中显示 */
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* 轮播图容器样式 */
+        .banner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 幻灯片容器样式 */
+        .slider {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        /* 单个幻灯片样式 */
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        /* 图片样式 */
+        .slide img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            width: auto;
+            height: auto;
+        }
+
+        /* 添加切换按钮样式 */
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.7);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            color: #333;
+            z-index: 10;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;           /* 默认隐藏 */
+        }
+
+        /* 鼠标悬停时显示按钮 */
+        #p6picture:hover .slider-btn {
+            opacity: 1;
+        }
+
+        .slider-btn:hover {
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+
+        .slider-btn.prev {
+            left: 10px;
+        }
+
+        .slider-btn.next {
+            right: 10px;
+        }
+
+        /* 添加按钮点击效果 */
+        .slider-btn:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        /* 修改样式部分 */
+        #p6picture {
+            width: 400px;          /* 设置基准宽度 */
+            height: 600px;         /* 设置基准高度 */
+            margin: 20px auto;     /* 居中显示 */
+            position: relative;    /* 用于定位按钮 */
+        }
+
+        /* 轮播图容器 */
+        .banner {
+            width: 100%;          /* 继承父容器宽度 */
+            height: 100%;         /* 继承父容器高度 */
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* 幻灯片容器 */
+        .slider {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        /* 单个幻灯片 */
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        /* 图片样式 */
+        .slide img {
+            width: 100%;          /* 与容器同宽 */
+            height: 100%;         /* 与容器同高 */
+            object-fit: cover;    /* 保持图片比例并填充 */
+            border-radius: 15px;  /* 与容器圆角一致 */
+        }
+
+        /* 优化按钮样式 */
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.7);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 24px;
+            color: #333;
+            z-index: 10;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;           /* 默认隐藏 */
+        }
+
+        /* 鼠标悬停时显示按钮 */
+        #p6picture:hover .slider-btn {
+            opacity: 1;
+        }
+
+        .slider-btn:hover {
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+
+        .slider-btn.prev {
+            left: 10px;
+        }
+
+        .slider-btn.next {
+            right: 10px;
+        }
+
+        /* 按钮点击效果 */
+        .slider-btn:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+    </style>
+</head>
+<body>
+    <!-- 添加音频元素 -->
+    <audio id="bgMusic" loop>
+        <source src="../resources/musics/happybirthday.mp3" type="audio/mpeg">
+        您的浏览器不支持音频元素。
+    </audio>
+    <!-- 添加烟花音效 -->
+    <audio id="fireworkSound" preload="auto">
+        <source src="../resources/musics/烟花爆炸.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- 封面 -->
+    <div id="cover" class="lighter-cursor" style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('https://static-cse.canva.cn/blob/238716/8.jpg');
+        background-size: cover;
+        background-position: center;
+        z-index: 1001;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    ">
+        <div class="candle">
+            <div class="flame"></div>
+            <div class="wick"></div>
+            <div class="candle-body">
+                <div class="wax-drips">
+                    <div class="wax-drip"></div>
+                    <div class="wax-drip"></div>
+                    <div class="wax-drip"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page" id="page1">
+            <div class="dialog left">🎂 亲爱的涵涵老婆，生日快乐呀！🎂</div>
+            <div class="dialog right">⭐ 新的一岁里，愿你继续快乐，继续可爱，继续温柔，继续美丽 ⭐</div>
+            <div class="dialog left">（づ￣3￣）づ╭💖～，往下滑动，看看我为你准备的礼物吧！(💖 ω 💖)</div>
+        </div>
+
+        <div class="page" id="page2">
+            <div class="dialog left">✌ 2023年2月17日，我们在一起啦。这是是我们交换的第一张照片 ✌</div>
+            <div class="dialog left"><img src="../resources/pictures/第一次照片王艺涵.jpg" alt=""></div>
+            <div class="dialog right"><img src="../resources/pictures/第一次照片母崇徐.jpg" alt="" style="height: 270px;"></div>
+        </div>
+
+        <div class="page" id="page3">
+            <div class="dialog left">😀 我们刚在一起的时候打的视频电话 😄</div>
+            <div class="dialog right"><img src="../resources/pictures/视频电话.jpg" alt="" style="height: 300px;"></div>
+            <div class="dialog left">😂 我们当时还是清纯的少年少女 😂</div>
+
+        </div>
+
+        <div class="page" id="page4">
+            <div class="dialog left">😘 在渠县偷偷约会交换戒指 😘</div>
+            <div class="dialog right">
+                <video src="../resources/vedios/交换戒指母.mp4"</video>
+            </div>
+            <div class="dialog left">
+                <video src="../resources/vedios/交换戒指王.mp4"</video>
+            </div>
+        </div>
+
+        <div class="page" id="page5">
+            <div class="dialog left">🎂 一起过了彼此的生日 🎂</div>
+            <div class="dialog right"><img src="../resources/pictures/王艺涵20生日照片1.jpg" alt="" style="height: 250px;"></div>
+            <div class="dialog left"><img src="../resources/pictures/母崇徐20岁生日照片2.jpg" alt="" style="height: 250px;"></div>
+        </div>
+
+        <div class="page" id="page6">
+            <div class="dialog left">我想说，你一直很美丽，不需要自卑和自负，你就是你，独一无二的你，你值得被爱，值得被珍惜！(o゜▽゜)o☆😘宝宝的美照😘→</div>
+            <div class="banner">
+                <div class="slider">
+                    <div class="slide active">
+                        <img src="../resources/pictures/23年3月.jpg" alt="图片1">
+                    </div>
+                    <div class="slide">
+                        <img src="../resources/pictures/23年7月.jpg" alt="图片2">
+                    </div>
+                    <div class="slide">
+                        <img src="../resources/pictures/23年10月.jpg" alt="图片3">
+                    </div>
+                    <div class="slide">
+                        <img src="../resources/pictures/24年3月.jpg" alt="图片4">
+                    </div>
+                    <div class="slide">
+                        <img src="../resources/pictures/24年5月.jpg" alt="图片5">
+                    </div>
+                    <div class="slide">
+                        <img src="../resources/pictures/24年6月.jpg" alt="图片6">
+                    </div>
+                    <div class="slide">
+                        <img src="../resources/pictures/24年9月.jpg" alt="图片7">
+                    </div>
+                    <div class="slide">
+                        <img src="../resources/pictures/24年10月.jpg" alt="图片8">
+                    </div>
+                    <div class="slide">
+                        <img src="../resources/pictures/24年10月.jpg" alt="图片9">
+                    </div>
+                </div>
+                <button class="slider-btn prev">❮</button>
+                <button class="slider-btn next">❯</button>
+            </div>
+        </div>
+
+        <div class="page" id="page7">
+            <div class="dialog left">👣 我们一起旅游，一起合照 👣</div>
+            <div class="dialog right"><img src="../resources/pictures/旅游1.jpg" alt="" style="height: 250px;"></div>
+            <div class="dialog left"><img src="../resources/pictures/旅游2.jpg" alt="" style="height: 250px;"></div>
+        </div>
+
+        <div class="page" id="page8">
+            <div class="dialog left">我们一起去过很多地方，在你21岁的一年里，我们一起去更多地方吧！</div>
+            <div class="dialog right">🌴 海边 🌴 🌅 日出 🌅 ☃️ 雪地 ☃️</div>
+        </div>
+
+        <div class="page" id="page9">
+            <div class="dialog left">最后，给你看漫天的星空！😘</div>
+            <div class="dialog right"><a href="./preface.html" id="stars"> ⭐ ✨ ✨ ✨ ⭐</a></div>
+        </div>
+    </div>
+
+    <script>
+        const container = document.querySelector('.container');
+        const pages = document.querySelectorAll('.page');
+        let currentPage = 0;
+        let isScrolling = false;
+        let hasPlayedMusic = false;
+
+        const bgMusic = document.getElementById('bgMusic');
+        const musicToggle = document.getElementById('musicToggle');
+        let isMusicPlaying = false;
+
+        const cover = document.getElementById('cover');
+        const candle = document.querySelector('.candle');
+        let hasEntered = false;
+
+        const fireworkSound = document.getElementById('fireworkSound');
+        
+        // 添加音频加载状态检查
+        document.addEventListener('DOMContentLoaded', () => {
+            const fireworkSound = document.getElementById('fireworkSound');
+            console.log('音频元素状态:', {
+                readyState: fireworkSound.readyState,
+                paused: fireworkSound.paused,
+                src: fireworkSound.currentSrc
+            });
+            
+            fireworkSound.addEventListener('error', (e) => {
+                console.error('音频加载错误:', e);
+            });
+        });
+
+        // 修改音播放函数
+        function playFireworkSound() {
+            const sound = fireworkSound.cloneNode();
+            sound.volume = 0.3;
+            
+            console.log('尝试播放音效');
+            
+            // 强制加载音频
+            sound.load();
+            
+            // 使用 Promise 处理放
+            const playPromise = sound.play();
+            if (playPromise !== undefined) {
+                playPromise
+                    .then(() => {
+                        console.log('音效播放成功');
+                    })
+                    .catch(error => {
+                        console.error('音效播放失败:', error);
+                        // 尝试替代方案
+                        setTimeout(() => {
+                            sound.play().catch(e => console.error('重试播放失败:', e));
+                        }, 100);
+                    });
+            }
+
+            sound.onended = function() {
+                console.log('音效播放结束');
+                sound.remove();
+            };
+        }
+
+        // 优化烟花创建函数
+        function createFirework(x, y) {
+            const colors = ['#ff0', '#ff3', '#f62', '#f24', '#f6f', '#63f', '#36f', '#3ff'];
+            const firework = document.createElement('div');
+            firework.className = 'fireworks';
+            document.body.appendChild(firework);
+
+            // 播放爆炸音效
+            playFireworkSound();
+
+            // 创建粒子
+            for (let i = 0; i < 80; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'firework';
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.backgroundColor = color;
+                particle.style.color = color;
+                
+                const angle = (Math.random() * Math.PI * 2);
+                const velocity = 100 + Math.random() * 150;
+                const finalX = Math.cos(angle) * velocity;
+                const finalY = Math.sin(angle) * velocity;
+                
+                particle.style.setProperty('--final-x', finalX + 'px');
+                particle.style.setProperty('--final-y', finalY + 'px');
+                
+                firework.appendChild(particle);
+            }
+
+            setTimeout(() => {
+                document.body.removeChild(firework);
+            }, 1000);
+        }
+
+        // 随机位置创建烟花
+        function createRandomFirework() {
+            const x = Math.random() * (window.innerWidth - 200) + 100; // 避免太靠边
+            const y = window.innerHeight * 0.3 + Math.random() * (window.innerHeight * 0.4); // 控制高度范围
+            createFirework(x, y);
+        }
+
+        // 修改蜡烛点击事件
+        candle.addEventListener('click', function() {
+            if (!hasEntered) {
+                // 立即播放烟花音效
+                fireworkSound.currentTime = 0;  // 确保从头开始播放
+                fireworkSound.volume = 0.7;     // 设置适当音量
+                fireworkSound.playbackRate = 3.9; // 设置2倍播放速度
+                fireworkSound.play()
+                    .then(() => {
+                        console.log('烟花音效播放成功');
+                    })
+                    .catch(error => {
+                        console.log('烟花音效播放失败:', error);
+                    });
+
+                // 点燃蜡烛
+                candle.classList.add('lit');
+                
+                // 移除打火机光标
+                cover.classList.remove('lighter-cursor');
+                
+                // 延迟显示烟花效果
+                setTimeout(() => {
+                    createRandomFirework();
+                }, 300);
+
+                // 延迟后放更多烟花
+                let fireworkCount = 0;
+                const fireworkInterval = setInterval(() => {
+                    createRandomFirework();
+                    fireworkCount++;
+                    if (fireworkCount >= 15) {
+                        clearInterval(fireworkInterval);
+                    }
+                }, 300);
+
+                // 延迟后整个封面淡出，并在淡出后播放背景音乐
+                setTimeout(() => {
+                    cover.style.transition = 'opacity 1s ease-in-out';
+                    cover.style.opacity = '0';
+                    
+                    setTimeout(() => {
+                        cover.style.display = 'none';
+                        showDialogs(0);
+                        
+                        // 在封面完全消失后播放背景音乐
+                        bgMusic.play()
+                            .then(() => {
+                                isMusicPlaying = true;
+                                bgMusic.volume = 0.5;
+                            })
+                            .catch(error => {
+                                console.log('背景音乐播放失败:', error);
+                            });
+                    }, 1000);
+                }, 3500);
+                
+                hasEntered = true;
+            }
+        });
+
+        function showDialogs(pageIndex) {
+            const dialogs = pages[pageIndex].querySelectorAll('.dialog');
+            requestAnimationFrame(() => {
+                dialogs.forEach(dialog => dialog.classList.add('show'));
+            });
+        }
+
+        function hideDialogs(pageIndex) {
+            const dialogs = pages[pageIndex].querySelectorAll('.dialog');
+            requestAnimationFrame(() => {
+                dialogs.forEach(dialog => dialog.classList.remove('show'));
+            });
+        }
+
+        // 初始化显示一页
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => showDialogs(0), 100);
+        });
+
+        // 优化滚轮事件处理
+        container.addEventListener('wheel', function(e) {
+            e.preventDefault();
+            
+            if (isScrolling) return;
+            
+            const delta = Math.sign(e.deltaY);
+            const nextPage = currentPage + delta;
+
+            if (nextPage >= 0 && nextPage < pages.length) {
+                isScrolling = true;
+                hideDialogs(currentPage);
+                currentPage = nextPage;
+               
+                this.scrollTo({
+                    top: currentPage * window.innerHeight,
+                    behavior: 'smooth'
+                });
+
+                // 等待滚动动画完成后显示对话框
+                setTimeout(() => {
+                    showDialogs(currentPage);
+                    isScrolling = false;
+                }, 500);
+            }
+        }, { passive: false });
+
+        // 处理滚动结束
+        let scrollTimeout;
+        container.addEventListener('scroll', function() {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                currentPage = Math.round(container.scrollTop / window.innerHeight);
+                showDialogs(currentPage);
+            }, 50);
+        });
+
+        // 处理窗口大小改
+        window.addEventListener('resize', () => {
+            container.scrollTo({
+                top: currentPage * window.innerHeight,
+                behavior: 'instant'
+            });
+        });
+
+        // 修改视频点击事件处理
+        document.querySelectorAll('video').forEach(video => {
+            // 添加元数据加载事件
+            video.addEventListener('loadedmetadata', function() {
+                console.log('视频元数据加载完成');
+                // 标记视频已准备好
+                this.dataset.ready = 'true';
+            });
+
+            video.addEventListener('click', async function() {
+                try {
+                    // 检查视频是否已加载
+                    if (!this.dataset.ready) {
+                        console.log('视频正在加载中，请稍候...');
+                        return;
+                    }
+
+                    // 如果视频已经在画中画模式，则退出
+                    if (document.pictureInPictureElement === this) {
+                        await document.exitPictureInPicture();
+                    } else {
+                        // 确保视频已加载
+                        if (this.readyState >= 2) {  // HAVE_CURRENT_DATA
+                            await this.requestPictureInPicture();
+                            // 移除自动播放
+                        } else {
+                            console.log('视频尚未准备好，请稍候再试');
+                        }
+                    }
+                } catch (err) {
+                    console.error('画中画模式切换失败:', err);
+                }
+            });
+
+            // 添加加错误处理
+            video.addEventListener('error', function() {
+                console.error('视频加载失败:', this.src);
+            });
+        });
+
+        // 添加轮播图功能
+        document.addEventListener('DOMContentLoaded', function() {
+            let currentSlide = 0;
+            const slides = document.querySelectorAll('.slide');
+            
+            function nextSlide() {
+                slides[currentSlide].classList.remove('active');
+                currentSlide = (currentSlide + 1) % slides.length;
+                slides[currentSlide].classList.add('active');
+            }
+            
+            slides[0].classList.add('active');
+            
+            setInterval(nextSlide, 3000);
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.querySelector('.slider-btn.prev');
+            const nextBtn = document.querySelector('.slider-btn.next');
+            let currentSlide = 0;
+            let slideInterval;
+
+            // 切换到下一张图片
+            function nextSlide() {
+                slides[currentSlide].classList.remove('active');
+                currentSlide = (currentSlide + 1) % slides.length;
+                slides[currentSlide].classList.add('active');
+            }
+
+            // 切换到上一张图片
+            function prevSlide() {
+                slides[currentSlide].classList.remove('active');
+                currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+                slides[currentSlide].classList.add('active');
+            }
+
+            // 重置自动轮播计时器
+            function resetInterval() {
+                clearInterval(slideInterval);
+                slideInterval = setInterval(nextSlide, 3000);
+            }
+
+            // 添加按钮点击事件
+            prevBtn.addEventListener('click', () => {
+                prevSlide();
+                resetInterval();
+            });
+
+            nextBtn.addEventListener('click', () => {
+                nextSlide();
+                resetInterval();
+            });
+
+            // 鼠标悬停时暂停自动轮播
+            document.querySelector('.banner').addEventListener('mouseenter', () => {
+                clearInterval(slideInterval);
+            });
+
+            // 鼠标离开时恢复自动轮播
+            document.querySelector('.banner').addEventListener('mouseleave', () => {
+                resetInterval();
+            });
+
+            // 初始化显示和自动轮播
+            slides[0].classList.add('active');
+            resetInterval();
+        });
+    </script>
+</body>
+</html>
