@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>项目详情</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .title {
+            text-align: center;
+            color: #d81b60;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .album {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            justify-items: center;
+        }
+
+        .album img {
+            width: 100%;
+            height: auto;
+            max-width: 200px;
+            border-radius: 8px;
+            object-fit: cover;
+            object-position: center;
+            border: 2px solid #ccc;
+            display: block; /* 确保图片作为块级元素 */
+            margin: auto; /* 水平居中 */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title" id="project-title">项目名称</h1>
+        <div class="album" id="album">
+            <!-- 图片将通过 JavaScript 动态插入 -->
+        </div>
+    </div>
+    <script>
+        // 创建音频对象
+        const audio = new Audio('./爱的回归线.mp3');
+        audio.loop = true;  // 设置循环播放
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // 从 localStorage 获取音乐时间
+            const savedTime = localStorage.getItem('bgMusicTime');
+            if (savedTime) {
+                audio.currentTime = parseFloat(savedTime);
+            }
+            
+            // 记住音乐播放位置
+            audio.addEventListener('timeupdate', () => {
+                localStorage.setItem('bgMusicTime', audio.currentTime);
+            });
+
+            // 添加点击事件监听器到整个文档
+            function startMusic() {
+                audio.play()
+                    .then(() => {
+                        localStorage.setItem('musicStarted', 'true');
+                        // 成功播放后移除事件监听器
+                        document.removeEventListener('click', startMusic);
+                    })
+                    .catch(error => {
+                        console.log("音乐播放失败:", error);
+                    });
+            }
+
+            // 如果已经在其他页面播放过，尝试自动播放
+            if (localStorage.getItem('musicStarted') === 'true') {
+                startMusic();
+            } else {
+                // 否则等待用户点击
+                document.addEventListener('click', startMusic);
+            }
+        });
+        
+        const projects = {
+            1: { title: "涵涵21岁生日", photos: ["", "", "", ""] },
+            2: { title: "看日出", photos: ["", "", "", ""] },
+            3: { title: "晨跑", photos: ["", "", "", ""] },
+            4: { title: "做一顿丰盛的晚饭", photos: ["", "", "", ""] },
+            5: { title: "一起去旅游", photos: ["", "", "", ""] },
+            6: { title: "去演唱会", photos: ["", "", "", ""] },
+            7: { title: "去海边玩", photos: ["", "", "", ""] },
+            8: { title: "一起跨年", photos: ["", "", "", ""] },
+            9: { title: "看一场烟花", photos: ["", "", "", ""] },
+            10: { title: "看21岁的第一次电影", photos: ["", "", "", ""] },
+            11: { title: "一起洗澡澡", photos: ["", "", "", ""] },
+            12: { title: "玩一次真心话大冒险", photos: ["", "", "", ""] },
+            13: { title: "养一只小动物", photos: ["", "", "", ""] },
+            14: { title: "帮对方洗头", photos: ["", "", "", ""] },
+            15: { title: "diy蛋糕", photos: ["", "", "", ""] },
+            16: { title: "一起玩电脑游戏", photos: ["", "", "", ""] },
+            17: { title: "刮刮乐", photos: ["", "", "", ""] },
+            18: { title: "养绿植", photos: ["", "", "", ""] },
+            19: { title: "一起爬山", photos: ["", "", "", ""] },
+            20: { title: "去动物园", photos: ["", "", "", ""] },
+            21: { title: "一起敷面膜", photos: ["", "", "", ""] },
+            22: { title: "一起刷牙", photos: ["", "", "", ""] },
+            23: { title: "超市购物", photos: ["", "", "", ""] },
+            24: { title: "做奶茶", photos: ["", "", "", ""] },
+            25: { title: "交换小时候的照片", photos: ["", "", "", ""] },
+            26: { title: "抓娃娃", photos: ["", "", "", ""] },
+            27: { title: "买情侣鞋", photos: ["", "", "", ""] },
+            28: { title: "挑个日子交换礼物", photos: ["", "", "", ""] },
+            29: { title: "互相手写一封信", photos: ["", "", "", ""] },
+            30: { title: "制定家规", photos: ["", "", "", ""] },
+            31: { title: "换一对戒指", photos: ["", "", "", ""] },
+            32: { title: "一起包饺子", photos: ["", "", "", ""] },
+            33: { title: "海族馆", photos: ["", "", "", ""] },
+            34: { title: "街边小摊、小吃街", photos: ["", "", "", ""] },
+            35: { title: "买情侣挂件", photos: ["", "", "", ""] }
+        };
+
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        function loadProject() {
+            const projectId = getQueryParam('project');
+            const project = projects[projectId];
+
+            if (project) {
+                document.getElementById('project-title').textContent = project.title;
+                const album = document.getElementById('album');
+                album.innerHTML = '';
+                project.photos.forEach(photo => {
+                    const img = document.createElement('img');
+                    img.src = photo; // 确保这些路径是正确的
+                    album.appendChild(img);
+                });
+            } else {
+                document.getElementById('project-title').textContent = "项目未找到";
+            }
+        }
+
+        loadProject();
+    </script>
+</body>
+</html>
